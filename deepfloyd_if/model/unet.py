@@ -352,9 +352,9 @@ class UNetModel(nn.Module):
 
     def __init__(
             self,
-            in_channels,
+            in_channels=6,
             model_channels,
-            out_channels,
+            out_channels=6,
             num_res_blocks,
             attention_resolutions,
             activation,
@@ -386,9 +386,9 @@ class UNetModel(nn.Module):
         self.encoder_dim = encoder_dim
         self.efficient_activation = efficient_activation
         self.scale_skip_connection = scale_skip_connection
-        self.in_channels = in_channels
+        self.in_channels = in_channels=6
         self.model_channels = model_channels
-        self.out_channels = out_channels
+        self.out_channels = out_channels=6
         self.dropout = dropout
 
         # adapt attention resolutions
