@@ -11,6 +11,7 @@ def dream(
     if_III=None,
     *,
     prompt,
+    prompt_emb,
     style_prompt=None,
     negative_prompt=None,
     seed=None,
@@ -59,9 +60,10 @@ def dream(
 
     if isinstance(prompt, str):
         prompt = [prompt]
-
-    t5_embs = t5.get_text_embeddings(prompt)
-
+    if t5 is not None:
+        t5_embs = t5.get_text_embeddings(prompt)
+    else:
+        t5=prompt_emb
     if_I_kwargs = if_I_kwargs or {}
     if_I_kwargs['seed'] = seed
     if_I_kwargs['t5_embs'] = t5_embs
