@@ -175,10 +175,10 @@ class IFBaseModule:
 
         if support_noise is None:
             noise = torch.randn(
-                (batch_size * bs_scale, 3, image_h, image_w), device=self.device, dtype=self.model.dtype)
+                (batch_size * bs_scale, 6, image_h, image_w), device=self.device, dtype=self.model.dtype)
         else:
             assert support_noise_less_qsample_steps < len(diffusion.timestep_map) - 1
-            assert support_noise.shape == (1, 3, image_h, image_w)
+            assert support_noise.shape == (1, 6, image_h, image_w)
             q_sample_steps = torch.tensor([int(len(diffusion.timestep_map) - 1 - support_noise_less_qsample_steps)])
             support_noise = support_noise.cpu()
             noise = support_noise.clone()
@@ -195,7 +195,7 @@ class IFBaseModule:
             with torch.no_grad():
                 sample = diffusion.p_sample_loop(
                     model_fn,
-                    (batch_size * bs_scale, 3, image_h, image_w),
+                    (batch_size * bs_scale, 6, image_h, image_w),
                     noise=noise,
                     clip_denoised=True,
                     model_kwargs=model_kwargs,
@@ -210,7 +210,7 @@ class IFBaseModule:
             with torch.no_grad():
                 sample = diffusion.ddim_sample_loop(
                     model_fn,
-                    (batch_size * bs_scale, 3, image_h, image_w),
+                    (batch_size * bs_scale, 6, image_h, image_w),
                     noise=noise,
                     clip_denoised=True,
                     model_kwargs=model_kwargs,
