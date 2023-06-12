@@ -378,7 +378,7 @@ class UNetModel(nn.Module):
             scale_skip_connection=False,
     ):  
         in_channels=6
-        in_channels=6
+        out_channels=6
         super().__init__()
         
         if num_heads_upsample == -1:
