@@ -63,7 +63,7 @@ def dream(
     if t5 is not None:
         t5_embs = t5.get_text_embeddings(prompt)
     else:
-        t5=prompt_emb
+        t5_embs=prompt_emb
     if_I_kwargs = if_I_kwargs or {}
     if_I_kwargs['seed'] = seed
     if_I_kwargs['t5_embs'] = t5_embs
