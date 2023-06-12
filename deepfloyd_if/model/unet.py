@@ -352,9 +352,9 @@ class UNetModel(nn.Module):
 
     def __init__(
             self,
-            in_channels=6,
+            in_channels,
             model_channels,
-            out_channels=6,
+            out_channels,
             num_res_blocks,
             attention_resolutions,
             activation,
@@ -376,9 +376,11 @@ class UNetModel(nn.Module):
             resblock_updown=False,
             efficient_activation=False,
             scale_skip_connection=False,
-    ):
+    ):  
+        in_channels=6
+        in_channels=6
         super().__init__()
-
+        
         if num_heads_upsample == -1:
             num_heads_upsample = num_heads
 
