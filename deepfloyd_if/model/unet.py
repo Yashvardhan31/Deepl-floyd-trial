@@ -388,9 +388,9 @@ class UNetModel(nn.Module):
         self.encoder_dim = encoder_dim
         self.efficient_activation = efficient_activation
         self.scale_skip_connection = scale_skip_connection
-        self.in_channels = in_channels=6
+        self.in_channels = in_channels
         self.model_channels = model_channels
-        self.out_channels = out_channels=6
+        self.out_channels = out_channels
         self.dropout = dropout
 
         # adapt attention resolutions
