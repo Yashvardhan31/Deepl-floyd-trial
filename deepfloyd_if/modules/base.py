@@ -237,7 +237,13 @@ class IFBaseModule:
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         if os.path.exists(path):
             checkpoint = torch.load(path, map_location='cpu')
+            sd = checkpoint["state_dict"]
+            new_conv_in_weight = torch.zeros(192, 6, 3, 3)
+            new_conv_in_weight[:,:3,:,:] = sd['input_blocks.0.0.weight']
+            sd["input_blocks.0.0.weight"] = new_conv_in_weight
+            checkpoint["stae_dict"]=sd
             param_device = 'cpu'
+            print(checkpoint.items())
             for param_name, param in checkpoint.items():
                 set_module_tensor_to_device(model, param_name, param_device, value=param)
         else:
