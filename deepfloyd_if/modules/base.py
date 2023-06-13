@@ -231,19 +231,17 @@ class IFBaseModule:
     def load_conf(self, dir_or_name, filename='config.yml'):
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         conf = OmegaConf.load(path)
+        conf['params']['in_channnels']=6
+        print(conf)
         return conf
 
     def load_checkpoint(self, model, dir_or_name, filename='pytorch_model.bin'):
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         if os.path.exists(path):
             checkpoint = torch.load(path, map_location='cpu')
-            sd = checkpoint["state_dict"]
             new_conv_in_weight = torch.zeros(192, 6, 3, 3)
-            new_conv_in_weight[:,:3,:,:] = sd['input_blocks.0.0.weight']
-            sd["input_blocks.0.0.weight"] = new_conv_in_weight
-            checkpoint["stae_dict"]=sd
-            param_device = 'cpu'
-            print(checkpoint.items())
+            new_conv_in_weight[:,:3,:,:]=checkpoint.items()['input_blocks.0.0.weight']
+            checkpoint.items()['input_blocks.0.0.weight']=new_conv_in_weight
             for param_name, param in checkpoint.items():
                 set_module_tensor_to_device(model, param_name, param_device, value=param)
         else:
