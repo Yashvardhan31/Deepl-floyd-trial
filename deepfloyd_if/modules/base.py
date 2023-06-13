@@ -239,6 +239,7 @@ class IFBaseModule:
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         if os.path.exists(path):
             checkpoint = torch.load(path, map_location='cpu')
+            param_device = 'cpu'
             new_conv_in_weight = torch.zeros(192, 6, 3, 3)
             new_conv_in_weight[:,:3,:,:]=checkpoint.items()['input_blocks.0.0.weight']
             checkpoint.items()['input_blocks.0.0.weight']=new_conv_in_weight
