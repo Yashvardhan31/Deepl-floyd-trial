@@ -19,5 +19,5 @@ def clip_process_generations(generations):
     return T.Compose([
         T.CenterCrop(min_size),
         T.Resize(224, interpolation=T.InterpolationMode.BICUBIC, antialias=True),
-        T.Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711)),
+        T.Normalize((0.48145466, 0.4578275, 0.40821073,0,0,0), (0.26862954, 0.26130258, 0.27577711,1,1,1)),
     ])(generations)
