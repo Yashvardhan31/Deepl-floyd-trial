@@ -232,6 +232,7 @@ class IFBaseModule:
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         conf = OmegaConf.load(path)
         conf['params']['in_channels']=6
+        conf['params']['out_channels']=12
         print(conf)
         return conf
 
@@ -240,14 +241,23 @@ class IFBaseModule:
         if os.path.exists(path):
             checkpoint = torch.load(path, map_location='cpu')
             param_device = 'cpu'
-            new_conv_in_weight = torch.zeros(192, 6, 3, 3)
+            print(checkpoint['input_blocks.0.0.weight'].dtype)
+            print(checkpoint['input_blocks.0.0.weight'].device)
+            d=checkpoint['input_blocks.0.0.weight'].device
+            new_conv_in_weight = torch.zeros(192, 6, 3, 3,dtype=torch.half,device=d)
             new_conv_in_weight[:,:3,:,:]=checkpoint['input_blocks.0.0.weight']
             checkpoint['input_blocks.0.0.weight']=new_conv_in_weight
+            new_conv_out_weight = torch.zeros(12, 192, 3, 3,dtype=torch.half,device=d)
+            new_conv_out_weight[:6,:,:,:]=checkpoint['out.2.weight']
+            checkpoint['out.2.weight']=new_conv_out_weight
+            new_conv_out_bias = torch.zeros(12,dtype=torch.half,device=d)
+            new_conv_out_bias[:6] = checkpoint['out.2.bias']
+            checkpoint['out.2.bias']=new_conv_out_bias
             for param_name, param in checkpoint.items():
                 set_module_tensor_to_device(model, param_name, param_device, value=param)
         else:
             print(f'Warning! In directory "{dir_or_name}" filename "pytorch_model.bin" is not found.')
-        model.cuda()
+        
         return model
 
     def _get_path_or_download_file_from_hf(self, dir_or_name, filename):
